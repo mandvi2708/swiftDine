@@ -55,6 +55,15 @@ const Body = () => {
            value ={searchText}
           onChange={(e)=>{
             setSearchText(e.target.value) ;
+          }}
+          onKeyDown={(e)=>{
+            if(e.key=== "Enter"){
+              const filteredRestaurants = listOfRestaurants.filter((restaurant) =>
+        restaurant.resname.toLowerCase().includes(searchText.toLowerCase())
+            );
+            setFilteredRestaurant(filteredRestaurants);
+            }
+
           }}/>
           <button
            onClick={()=> {
