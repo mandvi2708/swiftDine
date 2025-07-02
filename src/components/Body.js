@@ -1,23 +1,24 @@
 import RestaurantCard from './RestaurantCard';
 import { useState, useEffect } from 'react';
 import Shimmer from './Shimmer';
+import { Link } from 'react-router-dom';
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
   const [filteredRestaurant, setFilteredRestaurant] = useState([]);
   const [searchText, setSearchText] = useState("");
 
-    useEffect(() => {
+  useEffect(() => {
     fetchData();
   }, []);
+
   const fetchData = async () => {
     try {
-      const data = await fetch( 
+      const data = await fetch(
         "https://www.swiggy.com/dapi/restaurants/list/v5?lat=28.6288071&lng=77.1319777&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING"
       );
       const json = await data.json();
 
-      // Use optional chaining and fallback to empty array
       const restaurants =
         json?.data?.cards?.find(
           (card) => card?.card?.card?.gridElements?.infoWithStyle?.restaurants
@@ -31,7 +32,6 @@ const Body = () => {
         id: restaurant.info.id,
         img: `https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300/${restaurant.info.cloudinaryImageId}`,
       }));
-      console.log(cleanedRestaurants)
 
       setListOfRestaurants(cleanedRestaurants);
       setFilteredRestaurant(cleanedRestaurants);
@@ -41,56 +41,57 @@ const Body = () => {
   };
 
   if (listOfRestaurants.length === 0) {
-    return <Shimmer/>
-   
+    return <Shimmer />;
   }
 
   return (
     <div className="body">
       <div className="filter">
         <div className="search">
-          <input 
-          type="text"
-           className="search-box" 
-           value ={searchText}
-          onChange={(e)=>{
-            setSearchText(e.target.value) ;
-          }}
-          onKeyDown={(e)=>{
-            if(e.key=== "Enter"){
-              const filteredRestaurants = listOfRestaurants.filter((restaurant) =>
-        restaurant.resname.toLowerCase().includes(searchText.toLowerCase())
-            );
-            setFilteredRestaurant(filteredRestaurants);
-            }
-
-          }}/>
+          <input
+            type="text"
+            className="search-box"
+            value={searchText}
+            onChange={(e) => setSearchText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                const filteredRestaurants = listOfRestaurants.filter((restaurant) =>
+                  restaurant.resname.toLowerCase().includes(searchText.toLowerCase())
+                );
+                setFilteredRestaurant(filteredRestaurants);
+              }
+            }}
+          />
           <button
-           onClick={()=> {
-           const filteredRestaurants = listOfRestaurants.filter((restaurant) =>
-            restaurant.resname.toLowerCase().includes(searchText.toLowerCase())
-          );
-          setFilteredRestaurant(filteredRestaurants);
-               
-          }}>Search</button>
-
+            onClick={() => {
+              const filteredRestaurants = listOfRestaurants.filter((restaurant) =>
+                restaurant.resname.toLowerCase().includes(searchText.toLowerCase())
+              );
+              setFilteredRestaurant(filteredRestaurants);
+            }}
+          >
+            Search
+          </button>
         </div>
+
         <button
           className="filter-btn"
           onClick={() => {
             const filteredList = listOfRestaurants.filter(
-             (res) => !isNaN(parseFloat(res.Rating)) && parseFloat(res.Rating) > 4.5
+              (res) => !isNaN(parseFloat(res.Rating)) && parseFloat(res.Rating) > 4.5
             );
             setFilteredRestaurant(filteredList);
           }}
         >
           Top Rated Restaurants
-          
         </button>
       </div>
+
       <div className="res-container">
-        {filteredRestaurant.map((restaurant,index) => (
-          <RestaurantCard obj={restaurant}  abc={index} key={index}/>
+        {filteredRestaurant.map((restaurant) => (
+          <Link key={restaurant.id} to={`/restaurants/${restaurant.id}`}>
+            <RestaurantCard resData={restaurant} />
+          </Link>
         ))}
       </div>
     </div>

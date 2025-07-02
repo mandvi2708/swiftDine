@@ -16,10 +16,12 @@ const AppLayout = () => {
     </div>
   );
 };
+
 const appRouter = createBrowserRouter([
   {
     path: "/",
     element: <AppLayout />,
+    errorElement: <Error />,
     children: [
       {
         path: "/",
@@ -34,7 +36,7 @@ const appRouter = createBrowserRouter([
         element: <Contact />,
       },
       {
-        path: "/restaurant/:resId",
+        path: "/restaurants/:resId", // ✅ corrected path
         element: <RestaurantMenu />,
       },
     ],
@@ -42,5 +44,4 @@ const appRouter = createBrowserRouter([
 ]);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
-root.render(<AppLayout />);
 root.render(<RouterProvider router={appRouter} />);
