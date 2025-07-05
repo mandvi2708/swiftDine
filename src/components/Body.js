@@ -2,6 +2,7 @@ import RestaurantCard from './RestaurantCard';
 import { useState, useEffect } from 'react';
 import Shimmer from './Shimmer';
 import { Link } from 'react-router-dom';
+import useOnlineStatus from '../utils/useOnlineStatus';
 
 const Body = () => {
   const [listOfRestaurants, setListOfRestaurants] = useState([]);
@@ -39,6 +40,9 @@ const Body = () => {
       console.error("Failed to fetch restaurant data", error);
     }
   };
+  const onlineStatus=useOnlineStatus();
+  if(onlineStatus===false)return 
+  
 
   if (listOfRestaurants.length === 0) {
     return <Shimmer />;
@@ -99,3 +103,4 @@ const Body = () => {
 };
 
 export default Body;
+ 

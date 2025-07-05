@@ -7,12 +7,14 @@ import About from "../components/About";
 import Contact from "../components/Contact";
 import Error from "../components/Error";
 import RestaurantMenu from "../components/RestaurantMenu";
+import OfflineFallback from "../components/OfflineFallback"; // ✅
 
 const AppLayout = () => {
   return (
-    <div className="app">
+    <div className="app relative">
       <Header />
       <Outlet />
+      <OfflineFallback /> {/* ✅ Always mounted, only shows when offline */}
     </div>
   );
 };
@@ -36,7 +38,7 @@ const appRouter = createBrowserRouter([
         element: <Contact />,
       },
       {
-        path: "/restaurants/:resId", // ✅ corrected path
+        path: "/restaurants/:resId",
         element: <RestaurantMenu />,
       },
     ],
